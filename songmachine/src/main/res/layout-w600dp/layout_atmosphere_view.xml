@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_layout_tuning_bakcgorund"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tv_expression"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+
+        <GridView
+            android:id="@+id/grid_view_expression"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_weight="3"
+            android:horizontalSpacing="8dp"
+            android:numColumns="5"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tv_flower"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_xh1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@mipmap/hua1" />
+
+            <ImageView
+                android:id="@+id/image_xh2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@mipmap/hua2" />
+
+            <ImageView
+                android:id="@+id/image_xh3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@mipmap/hua3" />
+
+            <ImageView
+                android:id="@+id/image_xh4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@mipmap/hua4" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tv_sound_effect"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_daocai"
+                style="@style/ButtonAtmosphere"
+                android:text="@string/tv_inverted_color" />
+
+            <Button
+                android:id="@+id/btn_huanhu"
+                style="@style/ButtonAtmosphere"
+                android:text="@string/tv_cheer" />
+
+            <Button
+                android:id="@+id/btn_koushao"
+                style="@style/ButtonAtmosphere"
+                android:text="@string/tv_whistling" />
+
+            <Button
+                android:id="@+id/btn_zhangsheng"
+                style="@style/ButtonAtmosphere"
+                android:text="@string/tv_applause" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

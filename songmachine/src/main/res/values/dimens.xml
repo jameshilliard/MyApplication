@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ui_part_one_height">75dp</dimen>
+    <dimen name="ui_part_one_paging_button_height">25dp</dimen>
+    <dimen name="ui_part_one_paging_button_width">60dp</dimen>
+    <dimen name="ui_part_one_paging_button_text_size">14sp</dimen>
+    <dimen name="ui_part_one_paging_layout_span">400dp</dimen>
+    <dimen name="ui_part_one_text_margin_left">520dp</dimen>
+    <dimen name="ui_part_one_text_margin_top">24dp</dimen>
+
+    <dimen name="ui_main_image_width">56dp</dimen>
+    <dimen name="ui_main_image_height">36dp</dimen>
+    <dimen name="ui_main_text_margin_left">60dp</dimen>
+    <dimen name="ui_main_text_margin_top">8dp</dimen>
+
+    <!-- 气氛功能的一些相关参数 -->
+    <dimen name="dialog_image_expression_width">42dp</dimen>
+    <dimen name="dialog_image_expression_height">42dp</dimen>
+    <dimen name="dialog_sound_effect_button_text_size">12sp</dimen>
+</resources>
