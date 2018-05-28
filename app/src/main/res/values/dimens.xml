@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="match_parent">-1px</dimen>
+    <dimen name="record_video_margin_bottom">60dp</dimen>
+    <dimen name="record_video_margin_left">20dp</dimen>
+    <dimen name="record_video_time_text_size">25sp</dimen>
+
+</resources>

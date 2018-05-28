@@ -3,4 +3,9 @@
     <string name="app_btn_screen_direction">横竖屏切换</string>
     <string name="app_btn_prepare">预备</string>
     <string name="app_btn_change">切换到横屏显示</string>
+    <string name="app_btn_record_video">录制视频</string>
+    <string name="app_start_record_video">开始录制视频</string>
+    <string name="app_play_record_video">播放</string>
+    <string name="app_default_text">0</string>
+    <string name="app_stop_record_video">停止录像</string>
 </resources>

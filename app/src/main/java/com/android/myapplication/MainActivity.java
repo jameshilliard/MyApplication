@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Context mContext = MainActivity.this;
 
     private Button btnScreenDirection;
+    private Button btnRecordVideo;
     private Button btnPrepare;
     private Method method;
 
@@ -27,9 +28,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         btnScreenDirection = (Button) this.findViewById(R.id.btn_screen_direction);
+        btnRecordVideo = (Button) this.findViewById(R.id.btn_record_video);
         btnPrepare = (Button) this.findViewById(R.id.btn_prepare);
 
         btnScreenDirection.setOnClickListener(this);
+        btnRecordVideo.setOnClickListener(this);
         btnPrepare.setOnClickListener(this);
     }
 
@@ -39,6 +42,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_screen_direction:
                 method.startOtherUI(mContext, Utils.KEY_ACTIVITY_CODE_ONE);
                 finish();
+                break;
+            case R.id.btn_record_video:
+                method.startOtherUI(mContext,Utils.KEY_ACTIVITY_CODE_TWO);
+                //finish();
                 break;
             case R.id.btn_prepare:
                 break;

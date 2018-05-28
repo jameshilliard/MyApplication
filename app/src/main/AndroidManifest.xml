@@ -6,6 +6,13 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="22" />
 
+
+    <!--硬件支持-->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -29,6 +36,9 @@
         </activity>
         <activity
             android:name=".ui.PortraitActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.RecordVideoActivity"
             android:screenOrientation="portrait" />
     </application>
 

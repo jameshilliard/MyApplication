@@ -3,4 +3,9 @@
     <string name="app_btn_screen_direction">Change the screen direction</string>
     <string name="app_btn_prepare">Prepare</string>
     <string name="app_btn_change">Change</string>
+    <string name="app_btn_record_video">Record Video</string>
+    <string name="app_start_record_video">Record Video</string>
+    <string name="app_play_record_video">Play</string>
+    <string name="app_default_text">0</string>
+    <string name="app_stop_record_video">Stop record video</string>
 </resources>

@@ -20,6 +20,12 @@
             android:text="@string/app_btn_screen_direction" />
 
         <Button
+            android:id="@+id/btn_record_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_btn_record_video" />
+
+        <Button
             android:id="@+id/btn_prepare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
