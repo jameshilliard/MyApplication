@@ -16,16 +16,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 在sdcard中创建/删除文件的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 屏幕唤醒 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- 屏幕熄灭 -->
     <!-- <user-permission android:name="android.permission.DEVICE_POWER" /> -->
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -48,8 +49,13 @@
             android:name=".ui.RecordVideoActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.PackageManagerActivity" />
-        <activity android:name=".ui.RecordH264Activity"></activity>
-        <activity android:name=".ui.TestActivity"></activity>
+        <activity android:name=".ui.RecordH264Activity" />
+        <activity android:name=".ui.TestActivity" />
+
+        <service
+            android:name=".service.WifiStateService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

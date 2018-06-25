@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.android.myapplication.backlight.BrightnessControl;
+import com.android.myapplication.service.WifiStateService;
 import com.android.myapplication.util.Method;
 import com.android.myapplication.util.Utils;
 
@@ -66,34 +67,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 method.startOtherUI(mContext, Utils.KEY_ACTIVITY_CODE_THREE);
                 break;
             case R.id.btn_prepare:
-                BrightnessControl.setScreenOff(mContext);
-                Window window = getWindow();
-                WindowManager.LayoutParams layoutParams = window.getAttributes();
-                layoutParams.screenBrightness = 0f;
-                window.setAttributes(layoutParams);
-                //开启顶部下拉菜单栏
-                Intent intent = new Intent("com.statusbar.SHOW_OR_HIDE");
-                intent.putExtra("mode", 0x00000000);
-                mContext.sendBroadcast(intent);
-                Intent intent1 = new Intent("com.android.backlight.control");
-                intent1.putExtra("backlight", "0");
-                mContext.sendBroadcast(intent1);
+//                BrightnessControl.setScreenOff(mContext);
+//                Window window = getWindow();
+//                WindowManager.LayoutParams layoutParams = window.getAttributes();
+//                layoutParams.screenBrightness = 0f;
+//                window.setAttributes(layoutParams);
+//                //开启顶部下拉菜单栏
+//                Intent intent = new Intent("com.statusbar.SHOW_OR_HIDE");
+//                intent.putExtra("mode", 0x00000000);
+//                mContext.sendBroadcast(intent);
+//                Intent intent1 = new Intent("com.android.backlight.control");
+//                intent1.putExtra("backlight", "0");
+//                mContext.sendBroadcast(intent1);
+                Intent serviceIntent = new Intent(mContext, WifiStateService.class);
+                mContext.startService(serviceIntent);
                 break;
             default:
                 break;
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.i("liu","dispatchTouchEvent");
-        return super.dispatchTouchEvent(ev);
-        //return true;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Log.i("liu","onTouchEvent");
-        return super.onTouchEvent(event);
     }
 }
