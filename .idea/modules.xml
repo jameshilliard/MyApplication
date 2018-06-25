@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/JniDemo/JniDemo.iml" filepath="$PROJECT_DIR$/JniDemo/JniDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/appFFmpeg/appFFmpeg.iml" filepath="$PROJECT_DIR$/appFFmpeg/appFFmpeg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fourvideotest/fourvideotest.iml" filepath="$PROJECT_DIR$/fourvideotest/fourvideotest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hdmitest/hdmitest.iml" filepath="$PROJECT_DIR$/hdmitest/hdmitest.iml" />
       <module fileurl="file://$PROJECT_DIR$/songmachine/songmachine.iml" filepath="$PROJECT_DIR$/songmachine/songmachine.iml" />
     </modules>
   </component>

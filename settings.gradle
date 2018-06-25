@@ -1,1 +1,1 @@
-include ':app', ':songmachine'
+include ':app', ':songmachine', ':JniDemo', ':fourvideotest', ':appFFmpeg', ':hdmitest'

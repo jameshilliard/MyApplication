@@ -26,6 +26,12 @@
             android:text="@string/app_btn_record_video" />
 
         <Button
+            android:id="@+id/btn_package_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_btn_package_info" />
+
+        <Button
             android:id="@+id/btn_prepare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

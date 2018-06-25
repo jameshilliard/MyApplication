@@ -1,13 +1,16 @@
 package com.android.myapplication.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,9 +24,12 @@ import com.android.myapplication.R;
 import com.android.myapplication.util.Method;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class RecordVideoActivity extends AppCompatActivity implements View.OnClickListener,SurfaceHolder.Callback {
+public class RecordVideoActivity extends Activity implements View.OnClickListener, SurfaceHolder.Callback {
 
     public static final String TAG = "liu-RecordVideoActivity";
 
@@ -99,71 +105,75 @@ public class RecordVideoActivity extends AppCompatActivity implements View.OnCli
         // 是否正在播放视频
         stopPlayVideo();
         // 是否已经在录制
-        if (!isRecordVideo) {
-            imageview.setVisibility(View.GONE);
-            if (mediaRecorder == null) {
-                mediaRecorder = new MediaRecorder();
-            }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!isRecordVideo) {
+                    if (mediaRecorder == null) {
+                        mediaRecorder = new MediaRecorder();
+                    }
 
-            if (camera == null) {
-                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // 打开后置摄像头
-            }
+//            if (camera == null) {
+//                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // 打开后置摄像头
+//            }
 
-            cameraPreviewCallback = new CameraPreviewCallback();
-            camera.setPreviewCallback(cameraPreviewCallback);
-            camera.addCallbackBuffer(preBuffer);
-            camera.setPreviewCallbackWithBuffer(cameraPreviewCallback);
+                    cameraPreviewCallback = new CameraPreviewCallback();
+                    camera.setPreviewCallback(cameraPreviewCallback);
+                    camera.addCallbackBuffer(preBuffer);
+                    camera.setPreviewCallbackWithBuffer(cameraPreviewCallback);
 
-            if (camera != null) {
-                camera.setDisplayOrientation(90);
-                camera.unlock();
-                mediaRecorder.setCamera(camera);
-            } else {
-                Log.e(TAG, "camera is null , open the camera fail");
-            }
-            // 这两项需要放在setOutputFormat之前
-            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+                    if (camera != null) {
+                        camera.setDisplayOrientation(90);
+                        camera.unlock();
+                        mediaRecorder.setCamera(camera);
+                    } else {
+                        Log.e(TAG, "camera is null , open the camera fail");
+                    }
+                    // 这两项需要放在setOutputFormat之前
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+                    mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
-            // 这两项需要放在setOutputFormat之后
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+                    // 这两项需要放在setOutputFormat之后
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
 
-            mediaRecorder.setVideoSize(640, 480);
-            mediaRecorder.setVideoFrameRate(30);
-            mediaRecorder.setVideoEncodingBitRate(3 * 1024 * 1024);
-            mediaRecorder.setOrientationHint(90);
+                    mediaRecorder.setVideoSize(640, 480);
+                    mediaRecorder.setVideoFrameRate(30);
+                    mediaRecorder.setVideoEncodingBitRate(3 * 1024 * 1024);
+                    mediaRecorder.setOrientationHint(90);
 
-            //设置记录会话的最大持续时间（毫秒）
-            mediaRecorder.setMaxDuration(30 * 1000);
-            mediaRecorder.setPreviewDisplay(surfaceHolder.getSurface());
+                    //设置记录会话的最大持续时间（毫秒）
+                    mediaRecorder.setMaxDuration(30 * 1000);
+                    mediaRecorder.setPreviewDisplay(surfaceHolder.getSurface());
 
-            path = Method.getSDPath();
-            if (path != null) {
-                File file = new File(path + "/recordtest");
-                if (!file.exists()) {
-                    file.mkdir();
-                }
-                path = file + "/" + Method.getDate() + ".mp4";
-                mediaRecorder.setOutputFile(path);
-                try {
-                    mediaRecorder.prepare();
-                    mediaRecorder.start();
-                    isRecordVideo = true;
-                    btnStartStop.setText(mContext.getResources().getString(R.string.app_stop_record_video));
-                    handler.postDelayed(runnable, 1000);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, e.toString());
-                }
-            }
+                    path = Method.getSDPath();
+                    if (path != null) {
+                        File file = new File(path + "/recordtest");
+                        if (!file.exists()) {
+                            file.mkdir();
+                        }
+                        path = file + "/" + Method.getDate() + ".mp4";
+                        mediaRecorder.setOutputFile(path);
+                        try {
+                            mediaRecorder.prepare();
+                            mediaRecorder.start();
+                            isRecordVideo = true;
+//                            btnStartStop.setText(mContext.getResources().getString(R.string.app_stop_record_video));
+                            handler.postDelayed(runnable, 1000);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, e.toString());
+                        }
+                    }
 //            doOpenCamera();
 //            initCamera();
-        } else {
-            stopRecordVideo();
-        }
+                } else {
+                    stopRecordVideo();
+                }
+            }
+        }).start();
     }
 
     // 停止录制
@@ -178,7 +188,7 @@ public class RecordVideoActivity extends AppCompatActivity implements View.OnCli
                 camera = null;
             }
             isRecordVideo = false;
-            btnStartStop.setText(mContext.getResources().getString(R.string.app_start_record_video));
+//            btnStartStop.setText(mContext.getResources().getString(R.string.app_start_record_video));
             handler.removeCallbacks(runnable);
         }
     }
@@ -204,12 +214,14 @@ public class RecordVideoActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        Log.i("liu", "===surfaceCreated===");
         doOpenCamera();
         initCamera();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+        Log.i("liu", "===surfaceChanged===");
         imageview.setVisibility(View.GONE);
     }
 
@@ -228,9 +240,14 @@ public class RecordVideoActivity extends AppCompatActivity implements View.OnCli
             Log.i(TAG, "===CameraPreviewCallback===");
         }
 
+        /**
+         * 录出来的是yuv420sp 需要转成420p
+         *
+         * @param bytes
+         * @param camera
+         */
         @Override
         public void onPreviewFrame(byte[] bytes, Camera camera) {
-            Log.i(TAG,"===onPreviewFrame===");
             camera.addCallbackBuffer(bytes);
             int bytesToInt = bytesToInt2(bytes, 1);
             Log.e("liu", "bytesToInt: " + bytesToInt);

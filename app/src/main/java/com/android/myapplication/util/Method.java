@@ -2,14 +2,20 @@ package com.android.myapplication.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 
+import com.android.myapplication.ui.PackageManagerActivity;
 import com.android.myapplication.ui.PortraitActivity;
 import com.android.myapplication.ui.RecordVideoActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by liurenyi on 2018/5/23.
@@ -18,7 +24,10 @@ import java.util.Calendar;
 public class Method {
 
     private Intent intent;
+    public static ApplicationInfo info;
+    public static Drawable drawable;
 
+    // 开启activity
     public void startOtherUI(Context mContext, int type) {
         intent = new Intent();
         if (type == 1) {
@@ -26,6 +35,9 @@ public class Method {
             mContext.startActivity(intent);
         } else if (type == 2) {
             intent.setClass(mContext, RecordVideoActivity.class);
+            mContext.startActivity(intent);
+        } else if (type == 3) {
+            intent.setClass(mContext, PackageManagerActivity.class);
             mContext.startActivity(intent);
         }
 
@@ -65,6 +77,38 @@ public class Method {
         if (sdCardExist) {
             sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
             return sdDir.toString();
+        }
+        return null;
+    }
+
+    // List 集合去除 null 元素
+    public static <T> List<T> removeNull(List<? extends T> oldList) {
+        // 临时集合
+        List<T> listTemp = new ArrayList();
+        for (int i = 0; i < oldList.size(); i++) {
+            // 保存不为空的元素
+            Log.e("liu", "0.0.0" + oldList.get(i));
+            if (oldList.get(i).toString().length() > 0) {
+                listTemp.add(oldList.get(i));
+            }
+        }
+        return listTemp;
+    }
+
+    /**
+     * 根据包名，获取对应的小图标
+     *
+     * @param packageName
+     * @return
+     */
+    public static Drawable getIcon(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        try {
+            info = manager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            drawable = manager.getApplicationIcon(info);
+            return drawable;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         return null;
     }
