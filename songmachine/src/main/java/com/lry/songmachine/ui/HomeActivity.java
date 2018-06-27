@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -66,6 +65,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         OnCompletionListener, DialogInterface.OnDismissListener {
 
     public static final String TAG = "liu-HomeActivity";
+    public static final String TAG_TEST = "liu";
     public static final boolean DEBUG = true;
     public Context mContext = HomeActivity.this;
     public ViewSwitcher mViewSwitcher;
@@ -73,7 +73,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     public int togglePage;
     public GestureDetector mGestureDetector;
     public MyGestureDetector myGestureDetector;
-    public RelativeLayout mUIRelativeLayout;
     public LinearLayout relativeSurface;
     public LinearLayout linearLayout;
     public RadioButton mRadioButton1;
@@ -92,6 +91,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     private TextView selectedNumber, selectedInfo;
     public SeekBar seekBarVolume;
     public SurfaceView surfaceViewMain;
+    public SurfaceView surfaceViewRemote;
     public SurfaceHolder holder;
     public Intent intent;
     public Dialog dialog;
@@ -127,7 +127,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     public Display[] displays;
     public DifferentDisplay mDifferentDisplay;
 
-    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -142,7 +141,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,20 +217,19 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
 
     @SuppressLint("SetTextI18n")
     private void initOneView() {
-
         List<String> sdcardPath = Method.getAllExterSdcardPath();
         Log.e("liu", "sdcardPath: " + sdcardPath);
 
         mRadioButton1 = (RadioButton) this.findViewById(R.id.radio_left_1);
-        mRadioButton2 = (RadioButton)this.findViewById(R.id.radio_left_2);
-        mRadioButton3 = (RadioButton)this.findViewById(R.id.radio_left_3);
-        mRadioButton4 = (RadioButton)this.findViewById(R.id.radio_left_4);
-        mRadioButton5 = (RadioButton)this.findViewById(R.id.radio_left_5);
-        mRadioButton6 = (RadioButton)this.findViewById(R.id.radio_right_1);
-        mRadioButton7 = (RadioButton)this.findViewById(R.id.radio_right_2);
-        mRadioButton8 = (RadioButton)this.findViewById(R.id.radio_right_3);
-        mRadioButton9 = (RadioButton)this.findViewById(R.id.radio_right_4);
-        mRadioButton10 = (RadioButton)this.findViewById(R.id.radio_right_5);
+        mRadioButton2 = (RadioButton) this.findViewById(R.id.radio_left_2);
+        mRadioButton3 = (RadioButton) this.findViewById(R.id.radio_left_3);
+        mRadioButton4 = (RadioButton) this.findViewById(R.id.radio_left_4);
+        mRadioButton5 = (RadioButton) this.findViewById(R.id.radio_left_5);
+        mRadioButton6 = (RadioButton) this.findViewById(R.id.radio_right_1);
+        mRadioButton7 = (RadioButton) this.findViewById(R.id.radio_right_2);
+        mRadioButton8 = (RadioButton) this.findViewById(R.id.radio_right_3);
+        mRadioButton9 = (RadioButton) this.findViewById(R.id.radio_right_4);
+        mRadioButton10 = (RadioButton) this.findViewById(R.id.radio_right_5);
         mRadioButton1.setOnClickListener(this);
         mRadioButton2.setOnClickListener(this);
         mRadioButton3.setOnClickListener(this);
@@ -243,13 +240,13 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         mRadioButton8.setOnClickListener(this);
         mRadioButton9.setOnClickListener(this);
         mRadioButton10.setOnClickListener(this);
-        mRadioButtonSetting = (RadioButton)this.findViewById(R.id.radio_btn_settings);
-        mRadioButtonTuning = (RadioButton)this.findViewById(R.id.radio_btn_tuning);
+        mRadioButtonSetting = (RadioButton) this.findViewById(R.id.radio_btn_settings);
+        mRadioButtonTuning = (RadioButton) this.findViewById(R.id.radio_btn_tuning);
         mRadioButtonSetting.setOnClickListener(this);
         mRadioButtonTuning.setOnClickListener(this);
 
         btnPrev = (Button) this.findViewById(R.id.btn_prev);
-        btnNext = (Button)this.findViewById(R.id.btn_next);
+        btnNext = (Button) this.findViewById(R.id.btn_next);
         btnPrev.setOnClickListener(this);
         btnNext.setOnClickListener(this);
         tvPageNumber = (TextView) this.findViewById(R.id.tv_page_number);
@@ -273,6 +270,30 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
 
         surfaceViewMain = (SurfaceView) this.findViewById(R.id.surface_main);
         surfaceViewMain.setKeepScreenOn(true);
+
+        //副屏显示的surface
+        if (mDifferentDisplay != null) {
+            surfaceViewRemote = mDifferentDisplay.getmSurfaceView();
+            SurfaceHolder holderRemote = surfaceViewRemote.getHolder();
+            holderRemote.addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                    mMediaPlayer.setAuxiliaryDisplay(surfaceHolder); //SDK自定义的方法
+                }
+
+                @Override
+                public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                }
+            });
+        }
+
+        //主屏显示surface
         holder = surfaceViewMain.getHolder();
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -296,16 +317,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
 
     // 中间数据展示部分的控件初始化
     private void initTwoView() {
-
-        mUIRelativeLayout = (RelativeLayout) this.findViewById(R.id.relative_layout_ui);
-        /*mUIRelativeLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                mGestureDetector.onTouchEvent(motionEvent);
-                return true;
-            }
-        });*/
-
         mViewSwitcher = (ViewSwitcher) this.findViewById(R.id.view_switcher);
         mViewSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @SuppressLint("ClickableViewAccessibility")
@@ -407,10 +418,22 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     Log.e(TAG, "---onPrepared---");
-                    //副屏播放在前面可减少主副屏之间的误差
-                    if (mDifferentDisplay != null) {
-                        mDifferentDisplay.startPlayVideo(curPlaySong); //开启副屏播放
-                    }
+                    surfaceViewMain.getHolder().addCallback(new SurfaceHolder.Callback() {
+                        @Override
+                        public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                            mMediaPlayer.setDisplay(surfaceHolder);
+                        }
+
+                        @Override
+                        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                        }
+                    });
                     mMediaPlayer.start();
                     setupPresetReverb(mMediaPlayer);
                     setupBassBoost(mMediaPlayer);
@@ -533,8 +556,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     }
 
     /************************监听事件***************************/
-    @SuppressLint("NewApi")
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -701,11 +722,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     //重唱
     @SuppressLint("NewApi")
     private void Replay() {
-        if (mDifferentDisplay != null) {
-            mDifferentDisplay.Replay(); // 副屏也同时执行重唱功能
-        }
+//        if (mDifferentDisplay != null) {
+//            mDifferentDisplay.Replay(); // 副屏也同时执行重唱功能
+//        }
         if (mMediaPlayer != null) {
             mMediaPlayer.seekTo(0);
+            mMediaPlayer.start();
         }
     }
 
@@ -732,7 +754,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     }
 
     //暂停,播放视频
-    @SuppressLint("NewApi")
     public void pauseAndPlay(String type) {
         Log.e(TAG, "===pauseAndPlay()=== mDifferentDisplay: " + mDifferentDisplay);
         if (mMediaPlayer.isPlaying()) {
@@ -770,22 +791,26 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     private String curPlaySong = null;
 
     // 切歌功能
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void cutSongs() {
         release();
         if (selectedVideos.size() > 0) { //表示有已点的歌曲
             String path = selectedVideos.get(0).getVideoPath();
-            mMediaPlayer.reset(); // 重置mMediaPlayer
+            Log.i(TAG_TEST, "<HomeActivity> - path:" + path);
+            mMediaPlayer.reset(); //重置mMediaPlayer
             try {
                 mMediaPlayer.setDataSource(path);
                 curPlaySong = path;
                 mMediaPlayer.prepare();
-                //mMediaPlayer.start();
+                mMediaPlayer.start();
+                if (getDisplays() > 1) {
+                    setScreenDisPlay(); //切歌之后重新设置主显，副显情况
+                } else {
+                    setMainDisplay();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            PTOS();
+            // PTOS();
             // 解决上一首歌曲处于暂停状态，点击切歌，图标不改变。
             mRadioButton4.setCompoundDrawablesWithIntrinsicBounds(null, getResources().
                     getDrawable(R.drawable.ic_pause_circle_filled_black), null, null);
@@ -798,9 +823,70 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
     }
 
     /**
+     * 切歌之后重新设置主显，副显情况
+     */
+    private void setScreenDisPlay() {
+
+        //副屏显示的surface
+        surfaceViewRemote = mDifferentDisplay.getmSurfaceView();
+        SurfaceHolder holder1 = surfaceViewRemote.getHolder();
+        if (holder1 != null) {
+            mMediaPlayer.setAuxiliaryDisplay(holder1); // SDK自定义接口
+        } else {
+            Log.i("liu", "holder1 is null");
+        }
+
+        // 本地显示的surface
+        SurfaceHolder holder = surfaceViewMain.getHolder();
+        if (holder != null) {
+            mMediaPlayer.setDisplay(holder);
+        } else {
+            Log.i("liu", "holder is null");
+        }
+
+    }
+
+    /**
+     * 单独设置副屏显示，当HDMI拔掉之后在插上，使其保持异显状态
+     */
+    private void setSecondaryDisplay() {
+        surfaceViewRemote = mDifferentDisplay.getmSurfaceView();
+        SurfaceHolder holder = surfaceViewRemote.getHolder();
+        if (holder != null) {
+            mMediaPlayer.setAuxiliaryDisplay(holder); // SDK自定义接口
+        } else {
+            Log.e("liu", "<setSecondaryDisplay> -- holder is null");
+        }
+    }
+
+    /**
+     * 单独设置主显，在设备只拥有主显的情况下调用
+     */
+    private void setMainDisplay() {
+        SurfaceHolder holder = surfaceViewMain.getHolder();
+        if (holder != null) {
+            mMediaPlayer.setDisplay(holder);
+        } else {
+            Log.i("liu", "holder is null");
+        }
+    }
+
+    /**
+     * 获取当前的设备屏的个数
+     *
+     * @return 屏的数量
+     */
+    private int getDisplays() {
+        if (mDisplayManager == null) {
+            mDisplayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        }
+        Display[] display = mDisplayManager.getDisplays();
+        return display.length;
+    }
+
+    /**
      * VA --> vocal accompaniment 伴唱功能的方法
      */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void VA() {
         if (mMediaPlayer != null) {
             MediaPlayer.TrackInfo[] trackInfo = mMediaPlayer.getTrackInfo();
@@ -842,7 +928,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
      * PTOS --> Perform the original song
      * 强制执行原唱功能
      */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void PTOS() {
         MediaPlayer.TrackInfo[] trackInfo = mMediaPlayer.getTrackInfo();
         if (trackInfo != null && trackInfo.length > 0) {
@@ -953,12 +1038,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         View inflate = LayoutInflater.from(mContext).inflate(resId, null);
         if (resId == R.layout.layout_tuning) {
             btnOneFunction = (Button) inflate.findViewById(R.id.btn_function_one);
-            btnTwoFunction = (Button)inflate.findViewById(R.id.btn_function_two);
-            btnThreeFunction = (Button)inflate.findViewById(R.id.btn_function_three);
-            btnFourFunction = (Button)inflate.findViewById(R.id.btn_function_four);
-            btnFixFunction = (Button)inflate.findViewById(R.id.btn_function_five);
-            btnSixFunction = (Button)inflate.findViewById(R.id.btn_function_six);
-            btnSevenFunction = (Button)inflate.findViewById(R.id.btn_function_seven);
+            btnTwoFunction = (Button) inflate.findViewById(R.id.btn_function_two);
+            btnThreeFunction = (Button) inflate.findViewById(R.id.btn_function_three);
+            btnFourFunction = (Button) inflate.findViewById(R.id.btn_function_four);
+            btnFixFunction = (Button) inflate.findViewById(R.id.btn_function_five);
+            btnSixFunction = (Button) inflate.findViewById(R.id.btn_function_six);
+            btnSevenFunction = (Button) inflate.findViewById(R.id.btn_function_seven);
 
             tvPresetReverb = (TextView) inflate.findViewById(R.id.tv_preset_reverb);
 
@@ -1164,17 +1249,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
                 mMediaPlayer.setDataSource(curPlaySong);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
+                setScreenDisPlay();//切歌之后重新设置主显，副显情况
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-   /* @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        mGestureDetector.onTouchEvent(ev);
-        return super.dispatchTouchEvent(ev);
-    }*/
 
     @Override
     protected void onDestroy() {
@@ -1217,23 +1297,45 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         @Override
         public void onDisplayAdded(int i) {
             Log.i(TAG, "===onDisplayAdded===  i: " + i);
-
-            if (mMediaPlayer.isPlaying()) {
+            Display[] displays = mDisplayManager.getDisplays();
+            if (mDifferentDisplay != null) {
+                mDifferentDisplay.dismiss();
+            }
+            mDifferentDisplay = new DifferentDisplay(mContext, displays[1]);
+            mDifferentDisplay.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            mDifferentDisplay.show();
+            //setSecondaryDisplay();
+            if (mMediaPlayer != null) {
                 mMediaPlayer.pause();
                 int position = mMediaPlayer.getCurrentPosition();
-                Display[] displays = mDisplayManager.getDisplays();
-                if (displays.length > 1) {
-                    String name1 = displays[0].getName();
-                    String name2 = displays[displays.length - 1].getName();
-                    Log.i(TAG, "name1: " + name1 + " name2: " + name2);
-                    mDifferentDisplay = new DifferentDisplay(mContext, displays[displays.length - 1]);
-                    //mDifferentDisplay.setOnDismissListener(this);
-                    mDifferentDisplay.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                    mDifferentDisplay.show();
-                    // 副屏显示之后，然后播放副屏指定的内容。目前由于主副屏的视频不同步，暂时先这样处理
-                    mDifferentDisplay.ResumePlayVideo(curPlaySong, position); // TODO: 2018/5/9 0009 先忙其他事情
+                mMediaPlayer.stop();
+                mMediaPlayer.reset();
+                try {
+                    mMediaPlayer.setDataSource(curPlaySong);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                    mMediaPlayer.seekTo(position);
+                    setScreenDisPlay(); //切歌之后重新设置主显，副显情况
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+//            if (mMediaPlayer.isPlaying()) {
+//                mMediaPlayer.pause();
+//                int position = mMediaPlayer.getCurrentPosition();
+//                Display[] displays = mDisplayManager.getDisplays();
+//                if (displays.length > 1) {
+//                    String name1 = displays[0].getName();
+//                    String name2 = displays[displays.length - 1].getName();
+//                    Log.i(TAG, "name1: " + name1 + " name2: " + name2);
+//                    mDifferentDisplay = new DifferentDisplay(mContext, displays[displays.length - 1]);
+//                    //mDifferentDisplay.setOnDismissListener(this);
+//                    mDifferentDisplay.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+//                    mDifferentDisplay.show();
+//                    // 副屏显示之后，然后播放副屏指定的内容。目前由于主副屏的视频不同步，暂时先这样处理
+//                    // mDifferentDisplay.ResumePlayVideo(curPlaySong, position); // TODO: 2018/5/9 0009 先忙其他事情
+//                }
+//            }
 
 
         }

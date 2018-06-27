@@ -65,45 +65,6 @@ public class WelcomeActivity extends Activity {
         }).start();
     }
 
-//    private void initRxJava() {
-//        if (videoInfos != null || selectedVideos != null) {
-//            videoInfos.clear();
-//            selectedVideos.clear();
-//        }
-////        final File path = new File(Utils.KEY_SCANNING_PATH);
-//        final File path = new File(Utils.KEY_EXTRA_VIDEO_PATH + "/song/add"); // 指定硬盘中的目录
-//        Observable.just(path).flatMap(new Func1<File, Observable<File>>() {
-//            @Override
-//            public Observable<File> call(File file) {
-//                return RxUtils.listFiles(file);
-//            }
-//        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<File>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.e(TAG, "-->onCompleted()");
-//                intent = new Intent();
-//                intent.setClass(mContext, HomeActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(File file) {
-//                String filename = Method.formatFileName(file.getName());
-//                String filePath = file.getPath();
-//                Log.e(TAG, "filePath: " + filePath);
-//                VideoInfo info = new VideoInfo(filename, filePath);
-//                videoInfos.add(info);
-//                selectedVideos.add(info);
-//            }
-//        });
-//    }
-
     /**
      * 读取指定路径的文件信息
      */

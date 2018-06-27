@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -22,8 +21,7 @@ import com.lry.songmachine.util.MarqueeTextView;
 
 import java.io.IOException;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class DifferentDisplay extends Presentation implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener {
+public class DifferentDisplay extends Presentation {
 
     public static final String TAG = "liu-DifferentDisplay";
     public boolean DEBUG = true;
@@ -46,14 +44,18 @@ public class DifferentDisplay extends Presentation implements SurfaceHolder.Call
         super(outerContext, display);
     }
 
+    public SurfaceView getmSurfaceView() {
+        return mSurfaceView;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.different_display);
         mMediaPlayer = new MediaPlayer();
         mSurfaceView = (SurfaceView) this.findViewById(R.id.surface_different_display);
-        holder = mSurfaceView.getHolder();
-        holder.addCallback(this);
+//        holder = mSurfaceView.getHolder();
+//        holder.addCallback(this);
         imageAtmosphere = (ImageView) this.findViewById(R.id.image_atmosphere);
         startMarqueeTextView();
     }
@@ -63,7 +65,7 @@ public class DifferentDisplay extends Presentation implements SurfaceHolder.Call
         marqueeTextView = (MarqueeTextView) findViewById(R.id.tv_scroll);
         ViewGroup.MarginLayoutParams margin1 = new ViewGroup.MarginLayoutParams(
                 marqueeTextView.getLayoutParams());
-        margin1.setMargins(MARQUEE_MARGIN_LEFT, MARQUEE_MARGIN_TOP , 0, 0);//设置滚动区域位置：在左边距234像素，顶边距0像素的位置
+        margin1.setMargins(MARQUEE_MARGIN_LEFT, MARQUEE_MARGIN_TOP, 0, 0);//设置滚动区域位置：在左边距234像素，顶边距0像素的位置
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(margin1);
         layoutParams1.height = 160;//设滚动区域高度
         layoutParams1.width = 800; //设置滚动区域宽度
@@ -86,85 +88,85 @@ public class DifferentDisplay extends Presentation implements SurfaceHolder.Call
 
     //开始播放video，path-->video的路径
     public void startPlayVideo(String path) {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-            try {
-                mMediaPlayer.setDataSource(path);
-                mMediaPlayer.prepare();
-                mMediaPlayer.setVolume(0f, 0f);//静音播放
-                mMediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.e(TAG, "MediaPlayer is null");
-        }
+//        if (mMediaPlayer != null) {
+//            mMediaPlayer.reset();
+//            try {
+//                mMediaPlayer.setDataSource(path);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.setVolume(0f, 0f);//静音播放
+//                mMediaPlayer.start();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Log.e(TAG, "MediaPlayer is null");
+//        }
     }
 
     // 当拔掉HDMI，在插入HDMI时，恢复异显状态的播放
-    public void ResumePlayVideo(String path,int position) {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-            try {
-                mMediaPlayer.setDataSource(path);
-                mMediaPlayer.prepare();
-                mMediaPlayer.setVolume(0f, 0f);//静音播放
-                mMediaPlayer.start();
-                mMediaPlayer.seekTo(position);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            mMediaPlayer = new MediaPlayer();
-            try {
-                mMediaPlayer.setDataSource(path);
-                mMediaPlayer.prepare();
-                mMediaPlayer.setVolume(0f, 0f);//静音播放
-                mMediaPlayer.start();
-                mMediaPlayer.seekTo(position);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void ResumePlayVideo(String path, int position) {
+//        if (mMediaPlayer != null) {
+//            mMediaPlayer.reset();
+//            try {
+//                mMediaPlayer.setDataSource(path);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.setVolume(0f, 0f);//静音播放
+//                mMediaPlayer.start();
+//                mMediaPlayer.seekTo(position);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            mMediaPlayer = new MediaPlayer();
+//            try {
+//                mMediaPlayer.setDataSource(path);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.setVolume(0f, 0f);//静音播放
+//                mMediaPlayer.start();
+//                mMediaPlayer.seekTo(position);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 
     //副屏 - 重唱
     public void Replay() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.seekTo(0); //设置为开始位
-        }
+//        if (mMediaPlayer != null) {
+//            mMediaPlayer.seekTo(0); //设置为开始位
+//        }
     }
 
     //副屏 - 暂停播放
     public void pauseAndPlay(int position) {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.seekTo(position);
-            mMediaPlayer.pause();
-        } else {
-            mMediaPlayer.start();
-            mMediaPlayer.seekTo(position);
-        }
+//        if (mMediaPlayer.isPlaying()) {
+//            mMediaPlayer.seekTo(position);
+//            mMediaPlayer.pause();
+//        } else {
+//            mMediaPlayer.start();
+//            mMediaPlayer.seekTo(position);
+//        }
     }
 
     public void pause(int position) {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.seekTo(position - 50);
-            mMediaPlayer.pause();
-        }
+//        if (mMediaPlayer.isPlaying()) {
+//            mMediaPlayer.seekTo(position - 50);
+//            mMediaPlayer.pause();
+//        }
     }
 
     public void play(int position) {
-        if (!mMediaPlayer.isPlaying()) {
-            mMediaPlayer.start();
-            mMediaPlayer.seekTo(position);
-        }
+//        if (!mMediaPlayer.isPlaying()) {
+//            mMediaPlayer.start();
+//            mMediaPlayer.seekTo(position);
+//        }
     }
 
     public void play() {
-        if (!mMediaPlayer.isPlaying()) {
-            mMediaPlayer.start();
-        }
+//        if (!mMediaPlayer.isPlaying()) {
+//            mMediaPlayer.start();
+//        }
     }
 
     /**
@@ -237,25 +239,25 @@ public class DifferentDisplay extends Presentation implements SurfaceHolder.Call
     }
 
     /*********************************监听事件 start*****************************/
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        mMediaPlayer.setDisplay(surfaceHolder);
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-
-    }
+//    @Override
+//    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+//        mMediaPlayer.setDisplay(surfaceHolder);
+//    }
+//
+//    @Override
+//    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+//
+//    }
+//
+//    @Override
+//    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+//
+//    }
+//
+//    @Override
+//    public void onPrepared(MediaPlayer mediaPlayer) {
+//
+//    }
     /*********************************监听事件 end*****************************/
 
 }

@@ -34,7 +34,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     //编译RxJava所需依赖
-    compile 'io.reactivex:rxjava:1.0.14'
+    //compile 'io.reactivex:rxjava:1.0.14'
     //编译RxAndroid所需依赖
-    compile 'io.reactivex:rxandroid:1.0.1'
+    //compile 'io.reactivex:rxandroid:1.0.1'
 }
