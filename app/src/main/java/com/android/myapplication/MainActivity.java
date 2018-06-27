@@ -1,6 +1,7 @@
 package com.android.myapplication;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -79,8 +80,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                Intent intent1 = new Intent("com.android.backlight.control");
 //                intent1.putExtra("backlight", "0");
 //                mContext.sendBroadcast(intent1);
-                Intent serviceIntent = new Intent(mContext, WifiStateService.class);
-                mContext.startService(serviceIntent);
+//                Intent serviceIntent = new Intent(mContext, WifiStateService.class);
+//                mContext.startService(serviceIntent);
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.android.settings","com.android.settings.AudioControlService"));
+                mContext.startService(intent);
                 break;
             default:
                 break;

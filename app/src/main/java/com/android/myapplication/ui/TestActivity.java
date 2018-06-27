@@ -1,6 +1,7 @@
 package com.android.myapplication.ui;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -44,6 +45,7 @@ public class TestActivity extends AppCompatActivity {
         tpFilter.addAction("com.android.tp.on");
         tpFilter.addAction("com.android.tp.off");
         mContext.registerReceiver(changeTPStateReceiver, tpFilter);
+
     }
 
     /**
