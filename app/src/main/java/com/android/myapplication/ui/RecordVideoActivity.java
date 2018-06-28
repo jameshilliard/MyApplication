@@ -11,6 +11,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,9 +20,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.myapplication.R;
 import com.android.myapplication.util.Method;
+import com.android.myapplication.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +34,7 @@ import java.util.Date;
 
 public class RecordVideoActivity extends Activity implements View.OnClickListener, SurfaceHolder.Callback {
 
-    public static final String TAG = "liu-RecordVideoActivity";
+    public static final String TAG = "RecordVideoActivity";
 
     public Context mContext = RecordVideoActivity.this;
 
@@ -52,13 +55,25 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
 
     private CameraPreviewCallback cameraPreviewCallback;
 
-    private Handler handler = new Handler();
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Utils.KEY_HANDLE_MSG_CODE:
+                    text.setText("0");
+                    btnStartStop.setText(Utils.getString(mContext, R.string.app_start_record_video));
+                    break;
+            }
+        }
+    };
 
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             timer++;
             text.setText(timer + "");
+            btnStartStop.setText("停止录制");
             handler.postDelayed(runnable, 1000);
         }
     };
@@ -68,8 +83,40 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //此方法已经失效
         setContentView(R.layout.activity_record_video);
-        initView();
         mediaPlayer = new MediaPlayer();
+        initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopRecordVideo();
+        stopPlayVideo();
+    }
+
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        doOpenCamera();
+        initCamera();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+        imageview.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        if (camera != null) {
+            camera.release();
+            camera = null;
+        }
     }
 
     private void initView() {
@@ -84,7 +131,6 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
         surfaceHolder = mSurfaceView.getHolder();
         // 预览，打开摄像头
         surfaceHolder.addCallback(this);
-        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     @Override
@@ -113,14 +159,10 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                         mediaRecorder = new MediaRecorder();
                     }
 
-//            if (camera == null) {
-//                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // 打开后置摄像头
-//            }
-
-                    cameraPreviewCallback = new CameraPreviewCallback();
-                    camera.setPreviewCallback(cameraPreviewCallback);
-                    camera.addCallbackBuffer(preBuffer);
-                    camera.setPreviewCallbackWithBuffer(cameraPreviewCallback);
+//                    cameraPreviewCallback = new CameraPreviewCallback();
+//                    camera.setPreviewCallback(cameraPreviewCallback);
+//                    camera.addCallbackBuffer(preBuffer);
+//                    camera.setPreviewCallbackWithBuffer(cameraPreviewCallback);
 
                     if (camera != null) {
                         camera.setDisplayOrientation(90);
@@ -130,7 +172,7 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                         Log.e(TAG, "camera is null , open the camera fail");
                     }
                     // 这两项需要放在setOutputFormat之前
-                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -150,7 +192,7 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
 
                     path = Method.getSDPath();
                     if (path != null) {
-                        File file = new File(path + "/recordtest");
+                        File file = new File(path + "/A_record");
                         if (!file.exists()) {
                             file.mkdir();
                         }
@@ -160,15 +202,12 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                             mediaRecorder.prepare();
                             mediaRecorder.start();
                             isRecordVideo = true;
-//                            btnStartStop.setText(mContext.getResources().getString(R.string.app_stop_record_video));
                             handler.postDelayed(runnable, 1000);
                         } catch (IOException e) {
                             e.printStackTrace();
                             Log.e(TAG, e.toString());
                         }
                     }
-//            doOpenCamera();
-//            initCamera();
                 } else {
                     stopRecordVideo();
                 }
@@ -188,8 +227,11 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                 camera = null;
             }
             isRecordVideo = false;
-//            btnStartStop.setText(mContext.getResources().getString(R.string.app_start_record_video));
             handler.removeCallbacks(runnable);
+            timer = 0;
+            Message message = new Message();
+            message.what = Utils.KEY_HANDLE_MSG_CODE;
+            handler.sendMessage(message);
         }
     }
 
@@ -202,35 +244,6 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopRecordVideo();
-        stopPlayVideo();
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        Log.i("liu", "===surfaceCreated===");
-        doOpenCamera();
-        initCamera();
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-        Log.i("liu", "===surfaceChanged===");
-        imageview.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        Log.i(TAG, "===surfaceDestroyed()===");
-        if (camera != null) {
-            camera.release();
-            camera = null;
         }
     }
 
@@ -249,40 +262,12 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
         @Override
         public void onPreviewFrame(byte[] bytes, Camera camera) {
             camera.addCallbackBuffer(bytes);
-            int bytesToInt = bytesToInt2(bytes, 1);
-            Log.e("liu", "bytesToInt: " + bytesToInt);
         }
     }
 
     /**
-     * byte数组中取int数值，本方法适用于(低位在前，高位在后)的顺序，和和intToBytes（）配套使用
-     *
-     * @param src    byte数组
-     * @param offset 从数组的第offset位开始
-     * @return int数值
+     * open camera
      */
-    public static int bytesToInt(byte[] src, int offset) {
-        int value;
-        value = (int) ((src[offset] & 0xFF)
-                | ((src[offset + 1] & 0xFF) << 8)
-                | ((src[offset + 2] & 0xFF) << 16)
-                | ((src[offset + 3] & 0xFF) << 24));
-        return value;
-    }
-
-    /**
-     * byte数组中取int数值，本方法适用于(低位在后，高位在前)的顺序。和intToBytes2（）配套使用
-     */
-    public static int bytesToInt2(byte[] src, int offset) {
-        int value;
-        value = (int) (((src[offset] & 0xFF) << 24)
-                | ((src[offset + 1] & 0xFF) << 16)
-                | ((src[offset + 2] & 0xFF) << 8)
-                | (src[offset + 3] & 0xFF));
-        return value;
-    }
-
-    //去打开摄像头
     public void doOpenCamera() {
         Log.i(TAG, "Camera open....");
         int numCameras = Camera.getNumberOfCameras();
@@ -295,36 +280,40 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
             }
         }
         if (camera == null) {
+            camera = Camera.open();    //opens first back-facing camera
             Log.d(TAG, "No front-facing camera found; opening default");
-            camera = Camera.open();    // opens first back-facing camera
         }
         if (camera == null) {
             throw new RuntimeException("Unable to open camera");
         }
-        Log.i(TAG, "Camera open over....");
     }
 
+    /**
+     * Initializing the parameters of the camera
+     */
     private void initCamera() {
-        Camera.Parameters parameters = camera.getParameters();
-        parameters.setPreviewFormat(ImageFormat.NV21);
-        parameters.setFlashMode("off");
-        parameters.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);
-        // 场景模式：夜晚，沙滩，阳光等
-        parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
-        parameters.setPreviewSize(480, 640);
-        parameters.setPreviewFpsRange(30000, 30000);
-        try {
-            camera.setPreviewDisplay(surfaceHolder);
-            camera.setDisplayOrientation(90);
+        if (camera != null) {
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setPreviewFormat(ImageFormat.NV21);
+            parameters.setFlashMode("off");
+            parameters.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);
+            // 场景模式：夜晚，沙滩，阳光等
+            parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
+            parameters.setPreviewSize(480, 640);
+            parameters.setPreviewFpsRange(30000, 30000);
+            try {
+                camera.setPreviewDisplay(surfaceHolder);
+                camera.setDisplayOrientation(90);
 
-            cameraPreviewCallback = new CameraPreviewCallback();
-            camera.addCallbackBuffer(preBuffer);
-            camera.setPreviewCallback(cameraPreviewCallback);
-            camera.setParameters(parameters);
-            camera.startPreview();//该方法只有相机开启后才能调用
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.toString());
+                cameraPreviewCallback = new CameraPreviewCallback();
+                camera.addCallbackBuffer(preBuffer);
+                camera.setPreviewCallback(cameraPreviewCallback);
+                camera.setParameters(parameters);
+                camera.startPreview();//该方法只有相机开启后才能调用
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, e.toString());
+            }
         }
     }
 }

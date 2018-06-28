@@ -47,14 +47,20 @@
         <activity
             android:name=".ui.RecordVideoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.PackageManagerActivity" />
+
+        <activity
+            android:name=".ui.PackageManagerActivity"
+            android:label="@string/app_package_manager_name" />
+
         <activity android:name=".ui.RecordH264Activity" />
+
         <activity android:name=".ui.TestActivity" />
 
         <service
             android:name=".service.WifiStateService"
             android:enabled="true"
             android:exported="true" />
+
         <service
             android:name=".AudioControlService"
             android:enabled="true"

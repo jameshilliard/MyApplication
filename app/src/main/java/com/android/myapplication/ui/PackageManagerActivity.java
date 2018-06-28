@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -25,11 +27,14 @@ import java.util.List;
 
 public class PackageManagerActivity extends Activity {
 
-    public static final String TAG = "liu-PMActivity";
+    public static final String TAG = "PMActivity";
     public Context mContext = PackageManagerActivity.this;
 
     private List<IPackageInfo> mList = new ArrayList<IPackageInfo>();
-    private List<IPackageInfo> allPackageName;
+    private List<IPackageInfo> useAppInfos = new ArrayList<>(); // 当前使用的app的集合
+    private List<IPackageInfo> allPackageName; // 所有app的集合
+    private List<IPackageInfo> systemAppInfos; // 系统app的集合
+    private List<IPackageInfo> threeAppInfos; // 第三方app的集合
 
     private AllPackageManager manager;
     private ListView listView;
@@ -37,13 +42,35 @@ public class PackageManagerActivity extends Activity {
     private ResolveInfo resolveinfo;
     private Intent intent;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_manager);
-        manager = new AllPackageManager(mContext, mList);
-        allPackageName = manager.getAllPackageName();
+        getAppList(0);
         initView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.all_app:
+                updateList(getAppList(0));
+                break;
+            case R.id.system_app:
+                updateList(getAppList(1));
+                break;
+            case R.id.three_app:
+                updateList(getAppList(2));
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -51,17 +78,57 @@ public class PackageManagerActivity extends Activity {
         super.onResume();
     }
 
-    private void initView() {
-        listView = (ListView) this.findViewById(R.id.list_info);
-        baseAdapter = new PackageBaseAdapter(mContext, allPackageName);
-        listView.setAdapter(baseAdapter);
-        listView.setOnItemClickListener(new ListViewOnItemClick());
-        listView.setOnItemLongClickListener(new ListViewOnItemLongClick());
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * 获取当前需要加载的显示的app集合，（所有应用的集合，系统应用的集合，第三方应用的集合）
+     *
+     * @param type 类型
+     * @return 返回得到当前的应用集合
+     */
+    private List<IPackageInfo> getAppList(int type) {
+        useAppInfos.clear();
+        manager = new AllPackageManager(mContext, mList);
+        manager.getSystemApp();
+        if (type == 0) {
+            allPackageName = manager.getAllPackageName();
+            useAppInfos = allPackageName;
+        } else if (type == 1) {
+            systemAppInfos = manager.getmSystemAppList();
+            useAppInfos = systemAppInfos;
+        } else if (type == 2) {
+            threeAppInfos = manager.getmThreeAppList();
+            useAppInfos = threeAppInfos;
+        }
+        return useAppInfos;
+    }
+
+    /**
+     * 初始化list view的操作
+     */
+    private void initView() {
+        listView = (ListView) this.findViewById(R.id.list_info);
+        setListViewInfo();
+    }
+
+    /**
+     * 更新list view 的数据源，展示不同的数据
+     *
+     * @param infoList
+     */
+    private void updateList(List<IPackageInfo> infoList) {
+        useAppInfos = infoList;
+        setListViewInfo();
+    }
+
+    private void setListViewInfo() {
+        baseAdapter = new PackageBaseAdapter(mContext, useAppInfos);
+        listView.setAdapter(baseAdapter);
+        listView.setOnItemClickListener(new ListViewOnItemClick());
+        listView.setOnItemLongClickListener(new ListViewOnItemLongClick());
     }
 
     /**
@@ -71,7 +138,7 @@ public class PackageManagerActivity extends Activity {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            String packageName = mList.get(i).getPackageName();
+            String packageName = useAppInfos.get(i).getPackageName();
             String className = doStartApplicationWithPackageName(packageName);
             createDialog(className);
         }
@@ -84,7 +151,7 @@ public class PackageManagerActivity extends Activity {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-            appDetailedInfo(mList.get(i).getPackageName());
+            appDetailedInfo(useAppInfos.get(i).getPackageName());
             return true; // 返回true,消费掉此次长按事件
         }
     }
@@ -107,7 +174,7 @@ public class PackageManagerActivity extends Activity {
             e.printStackTrace();
         }
         if (packageinfo == null) {
-            Log.e("liu", "error package info is null");
+            Log.e(TAG, "error package info is null");
         }
         // 创建一个类别为CATEGORY_LAUNCHER的该包名的Intent
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -117,7 +184,7 @@ public class PackageManagerActivity extends Activity {
         try {
             resolveinfo = (ResolveInfo) resolveinfoList.iterator().next();
         } catch (Exception e) {
-            Log.e("liu", e.toString());
+            Log.e(TAG, e.toString());
             return "unknowns";
         }
         if (resolveinfo != null) {
