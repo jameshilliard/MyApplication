@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lry.songmachine.WelcomeActivity">
+    tools:context="com.android.myapplication.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btn_Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tv_place_song" />
+        android:text="Hello World!" />
 
 </RelativeLayout>

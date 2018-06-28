@@ -278,7 +278,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
             holderRemote.addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                    mMediaPlayer.setAuxiliaryDisplay(surfaceHolder); //SDK自定义的方法
+                    //mMediaPlayer.setAuxiliaryDisplay(surfaceHolder); //SDK自定义的方法
                 }
 
                 @Override
@@ -765,7 +765,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
             }
             mDisplayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
             displays = mDisplayManager.getDisplays();
-            Log.e("liu-zzz", "displays.length = " + displays.length);
             if (displays.length > 1) {
                 mDifferentDisplay = new DifferentDisplay(mContext, displays[1]);
                 //监听副屏显示的状态
@@ -817,6 +816,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
             mRadioButton4.setText(mContext.getResources().getString(R.string.radio_button_left_4_text));
             selectedVideos.remove(0);
             selectedNumber.setText(String.valueOf(selectedVideos.size()));
+            try {
+                Thread.sleep(2000);
+                setRhythm();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
             Method.toast(mContext, mContext.getString(R.string.tv_songs_alter_text));
         }
@@ -831,7 +836,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         surfaceViewRemote = mDifferentDisplay.getmSurfaceView();
         SurfaceHolder holder1 = surfaceViewRemote.getHolder();
         if (holder1 != null) {
-            mMediaPlayer.setAuxiliaryDisplay(holder1); // SDK自定义接口
+            //mMediaPlayer.setAuxiliaryDisplay(holder1); // SDK自定义接口
         } else {
             Log.i("liu", "holder1 is null");
         }
@@ -853,7 +858,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
         surfaceViewRemote = mDifferentDisplay.getmSurfaceView();
         SurfaceHolder holder = surfaceViewRemote.getHolder();
         if (holder != null) {
-            mMediaPlayer.setAuxiliaryDisplay(holder); // SDK自定义接口
+            //mMediaPlayer.setAuxiliaryDisplay(holder); // SDK自定义接口
         } else {
             Log.e("liu", "<setSecondaryDisplay> -- holder is null");
         }
@@ -895,7 +900,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
                     Log.e(TAG, "TrackInfo length: " + trackInfo.length);
                 }
                 if (trackInfo.length >= 3) { // 如果大于等于3，则视频文件支持伴唱原唱功能
-                    Log.d(TAG, "歌曲支持原唱，伴唱功能");
+                    Log.d(TAG, "歌曲支持原唱，伴唱功能,切换音轨");
                     if (isYuanChang) {
                         mMediaPlayer.selectTrack(2); // 伴唱
                         isYuanChang = false;
@@ -906,6 +911,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
                         mRadioButton7.setText("伴唱");
                     }
                 } else if (trackInfo.length == 2) { // 如果trackInfo.length等于2，一般都是标准的VCD视频
+                    Log.d(TAG, "歌曲支持原唱，伴唱功能,切换左右声道");
                     if (isYuanChang) {
                         //如果是vcd视频，切换左右声道，达到原唱伴唱节奏,右声道设置为0消除人声
                         mMediaPlayer.setVolume(1, 0);
@@ -935,6 +941,20 @@ public class HomeActivity extends Activity implements View.OnClickListener, Medi
             mMediaPlayer.setVolume(1, 1);
             isYuanChang = true;
             mRadioButton7.setText("伴唱");
+        }
+    }
+
+    /**
+     * If the last song is set as a accompaniment, then the accompaniment is kept after the song is cut.
+     * If the last song is set for original sound effect, then keep the original sound effect  after the song is cut.
+     */
+    private void setRhythm() {
+        MediaPlayer.TrackInfo[] trackInfo = mMediaPlayer.getTrackInfo();
+        if (trackInfo.length > 2) {
+            if (!isYuanChang) {
+                mMediaPlayer.setVolume(1, 1);
+                mMediaPlayer.selectTrack(2); // 播放的歌曲为DVD歌曲，如果上一首被设置为伴唱模式，那么此时播放的歌曲也被设置为伴唱模式
+            }
         }
     }
 

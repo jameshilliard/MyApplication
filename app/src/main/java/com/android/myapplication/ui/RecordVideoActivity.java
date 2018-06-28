@@ -97,6 +97,9 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
         super.onDestroy();
         stopRecordVideo();
         stopPlayVideo();
+        if (camera != null) {
+            camera.release();
+        }
     }
 
 
@@ -113,10 +116,7 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        if (camera != null) {
-            camera.release();
-            camera = null;
-        }
+
     }
 
     private void initView() {
@@ -158,11 +158,6 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                     if (mediaRecorder == null) {
                         mediaRecorder = new MediaRecorder();
                     }
-
-//                    cameraPreviewCallback = new CameraPreviewCallback();
-//                    camera.setPreviewCallback(cameraPreviewCallback);
-//                    camera.addCallbackBuffer(preBuffer);
-//                    camera.setPreviewCallbackWithBuffer(cameraPreviewCallback);
 
                     if (camera != null) {
                         camera.setDisplayOrientation(90);
@@ -261,6 +256,10 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
          */
         @Override
         public void onPreviewFrame(byte[] bytes, Camera camera) {
+            int width = camera.getParameters().getPreviewSize().width;
+            int height = camera.getParameters().getPreviewSize().height;
+            byte[] yuv420 = new byte[width * height * 3 / 2];
+            YUV420SP2YUV420(bytes,yuv420,width,height);
             camera.addCallbackBuffer(bytes);
         }
     }
@@ -300,6 +299,7 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
             // 场景模式：夜晚，沙滩，阳光等
             parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
             parameters.setPreviewSize(480, 640);
+            //parameters.setPreviewSize(1080, 1920);
             parameters.setPreviewFpsRange(30000, 30000);
             try {
                 camera.setPreviewDisplay(surfaceHolder);
@@ -314,6 +314,26 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                 e.printStackTrace();
                 Log.e(TAG, e.toString());
             }
+        }
+    }
+
+    private void YUV420SP2YUV420(byte[] yuv420sp, byte[] yuv420, int width, int height) {
+        if (yuv420sp == null || yuv420 == null) return;
+        int framesize = width * height;
+        int i = 0, j = 0;
+        //copy y
+        for (i = 0; i < framesize; i++) {
+            yuv420[i] = yuv420sp[i];
+        }
+        i = 0;
+        for (j = 0; j < framesize / 2; j += 2) {
+            yuv420[i + framesize * 5 / 4] = yuv420sp[j + framesize];
+            i++;
+        }
+        i = 0;
+        for (j = 1; j < framesize / 2; j += 2) {
+            yuv420[i + framesize] = yuv420sp[j + framesize];
+            i++;
         }
     }
 }

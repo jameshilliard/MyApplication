@@ -47,4 +47,5 @@
     <string name="tv_cheer">欢呼</string>
     <string name="tv_whistling">口哨</string>
     <string name="tv_applause">掌声</string>
+    <string name="tv_place_song">请在Movies目录下放置一些歌曲</string>
 </resources>

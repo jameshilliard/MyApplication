@@ -47,4 +47,5 @@
     <string name="tv_cheer">Cheer</string>
     <string name="tv_whistling">Whistling</string>
     <string name="tv_applause">Applause</string>
+    <string name="tv_place_song">Please put some song in the Movies directory!</string>
 </resources>

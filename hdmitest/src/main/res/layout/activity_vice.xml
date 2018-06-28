@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pax.threeparts.functiondesign.vice.ViceActivity">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+
+        <Button
+            android:id="@+id/btn_sample"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="同屏显示"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_color"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="颜色显示"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_string"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="字符显示"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_video"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="播放视频"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_touch"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="触摸报点"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_draw"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="画图签名"
+            android:textSize="@dimen/sp25"/>
+
+        <Button
+            android:id="@+id/btn_click"
+            android:layout_width="@dimen/dp200"
+            android:layout_height="wrap_content"
+            android:text="点击控件"
+            android:textSize="@dimen/sp25"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
