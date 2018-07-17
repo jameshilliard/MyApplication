@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <SurfaceView
+        android:id="@+id/surface_camera"
+        android:layout_width="800px"
+        android:layout_height="600px" />
+    
+    <LinearLayout
+        android:layout_width="300px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:orientation="vertical" >
+    
+    <LinearLayout
+        android:focusable="true" 
+   		android:focusableInTouchMode="true"
+        android:layout_width="0px" 
+   	    android:layout_height="0px"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设备信息" />
+
+        <EditText
+            android:id="@+id/devidText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="设备ID" />
+
+        <EditText
+            android:id="@+id/pwdText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/hostText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="服务器地址" />
+
+        <Spinner
+            android:id="@+id/qualitySp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/sureBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="应用" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -10,6 +10,9 @@
       <module fileurl="file://$PROJECT_DIR$/fourvideotest/fourvideotest.iml" filepath="$PROJECT_DIR$/fourvideotest/fourvideotest.iml" />
       <module fileurl="file://$PROJECT_DIR$/hdmitest/hdmitest.iml" filepath="$PROJECT_DIR$/hdmitest/hdmitest.iml" />
       <module fileurl="file://$PROJECT_DIR$/songmachine/songmachine.iml" filepath="$PROJECT_DIR$/songmachine/songmachine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/videocamera/videocamera.iml" filepath="$PROJECT_DIR$/videocamera/videocamera.iml" />
+      <module fileurl="file://$PROJECT_DIR$/videoplayer/videoplayer.iml" filepath="$PROJECT_DIR$/videoplayer/videoplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zxing/zxing.iml" filepath="$PROJECT_DIR$/zxing/zxing.iml" />
     </modules>
   </component>
 </project>

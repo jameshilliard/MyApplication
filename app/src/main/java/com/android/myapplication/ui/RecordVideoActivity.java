@@ -3,13 +3,10 @@ package com.android.myapplication.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -20,17 +17,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.myapplication.R;
 import com.android.myapplication.util.Method;
 import com.android.myapplication.util.Utils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class RecordVideoActivity extends Activity implements View.OnClickListener, SurfaceHolder.Callback {
 
@@ -158,7 +151,6 @@ public class RecordVideoActivity extends Activity implements View.OnClickListene
                     if (mediaRecorder == null) {
                         mediaRecorder = new MediaRecorder();
                     }
-
                     if (camera != null) {
                         camera.setDisplayOrientation(90);
                         camera.unlock();

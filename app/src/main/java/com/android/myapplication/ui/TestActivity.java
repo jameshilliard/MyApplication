@@ -1,5 +1,7 @@
 package com.android.myapplication.ui;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Set;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -161,5 +164,17 @@ public class TestActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void doOpenBluetooth() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter.isEnabled()) {
+            Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+            if (bondedDevices.size() > 0) {
+                for (BluetoothDevice item : bondedDevices) {
+                    Log.i("liu", "已配对设备：" + item.getName() + "\n" + "设备地址：" + item.getAddress());
+                }
+            }
+        }
+    }
 
 }

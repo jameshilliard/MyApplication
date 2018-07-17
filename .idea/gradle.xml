@@ -15,6 +15,9 @@
             <option value="$PROJECT_DIR$/fourvideotest" />
             <option value="$PROJECT_DIR$/hdmitest" />
             <option value="$PROJECT_DIR$/songmachine" />
+            <option value="$PROJECT_DIR$/videocamera" />
+            <option value="$PROJECT_DIR$/videoplayer" />
+            <option value="$PROJECT_DIR$/zxing" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

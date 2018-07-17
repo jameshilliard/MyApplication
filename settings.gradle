@@ -1,1 +1,1 @@
-include ':app', ':songmachine', ':JniDemo', ':fourvideotest', ':appFFmpeg', ':hdmitest', ':MediaCodec'
+include ':app', ':songmachine', ':JniDemo', ':fourvideotest', ':appFFmpeg', ':hdmitest', ':MediaCodec', ':videocamera', ':zxing', ':videoplayer'
